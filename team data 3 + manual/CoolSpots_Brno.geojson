@@ -1,0 +1,380 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_001",
+        "type": "arcade",
+        "shade_quality": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.720659599449608,
+          49.186505662894
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_002",
+        "type": "public_mist",
+        "shade_quality": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.693710995226237,
+          49.252891349300214
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_003",
+        "type": "shaded_square",
+        "shade_quality": 4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.674488000716806,
+          49.19989922999974
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_004",
+        "type": "public_mist",
+        "shade_quality": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.62384181251996,
+          49.249961408464294
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_005",
+        "type": "park_refuge",
+        "shade_quality": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.524837879801623,
+          49.16640258963263
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_006",
+        "type": "fountain",
+        "shade_quality": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.521653892966572,
+          49.218844011441035
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_007",
+        "type": "shaded_square",
+        "shade_quality": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.527224980352194,
+          49.16674003281103
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_008",
+        "type": "arcade",
+        "shade_quality": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.584049770711847,
+          49.211415611980854
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_009",
+        "type": "park_refuge",
+        "shade_quality": 5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.686371090152623,
+          49.213923393139474
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_010",
+        "type": "arcade",
+        "shade_quality": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.700462467586874,
+          49.20726710263118
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_011",
+        "type": "shaded_square",
+        "shade_quality": 4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.671566032388373,
+          49.16943257964918
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_012",
+        "type": "fountain",
+        "shade_quality": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.71868245212501,
+          49.20111022760497
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_013",
+        "type": "fountain",
+        "shade_quality": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.68748912534147,
+          49.1660612674077
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_014",
+        "type": "public_mist",
+        "shade_quality": 4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.643345723399378,
+          49.17915900721416
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_015",
+        "type": "fountain",
+        "shade_quality": 4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.62640445573222,
+          49.17834880357872
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_016",
+        "type": "fountain",
+        "shade_quality": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.716872385267727,
+          49.24080222447317
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_017",
+        "type": "fountain",
+        "shade_quality": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.64433522576307,
+          49.225214489399846
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_018",
+        "type": "public_mist",
+        "shade_quality": 4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.71520001891529,
+          49.25263669830081
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_019",
+        "type": "arcade",
+        "shade_quality": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.569161878815812,
+          49.20856411254507
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_020",
+        "type": "arcade",
+        "shade_quality": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.520495737020827,
+          49.17646371214015
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_021",
+        "type": "shaded_square",
+        "shade_quality": 4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.700579752062648,
+          49.25265180735593
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_022",
+        "type": "park_refuge",
+        "shade_quality": 4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.688016223005558,
+          49.229659150360014
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_023",
+        "type": "fountain",
+        "shade_quality": 5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.58824279986375,
+          49.1754796825274
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_024",
+        "type": "shaded_square",
+        "shade_quality": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.5340202414396,
+          49.233573717878905
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "CS_025",
+        "type": "park_refuge",
+        "shade_quality": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.629661358935056,
+          49.16501423372639
+        ]
+      }
+    }
+  ]
+}

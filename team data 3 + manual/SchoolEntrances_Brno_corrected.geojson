@@ -1,0 +1,155 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_001", "school_name": "Základní škola a mateřská škola Brno, Antonínská 3" },
+      "geometry": { "type": "Point", "coordinates": [16.605137, 49.20251] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_002", "school_name": "Základní škola a mateřská škola Brno, Horní 16" },
+      "geometry": { "type": "Point", "coordinates": [16.6018, 49.177] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_003", "school_name": "Základní škola a mateřská škola Brno, Husova 17" },
+      "geometry": { "type": "Point", "coordinates": [16.6036, 49.192] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_004", "school_name": "Základní škola a mateřská škola Brno, Kotlářská 4" },
+      "geometry": { "type": "Point", "coordinates": [16.597, 49.2053] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_005", "school_name": "Základní škola a mateřská škola Brno, Křídlovická 30b" },
+      "geometry": { "type": "Point", "coordinates": [16.5983, 49.1868] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_006", "school_name": "Cyrilometodějská církevní základní škola, Lerchova 65" },
+      "geometry": { "type": "Point", "coordinates": [16.586, 49.1998] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_007", "school_name": "Základní škola, Brno, náměstí Svornosti 7" },
+      "geometry": { "type": "Point", "coordinates": [16.5878, 49.1749] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_008", "school_name": "Základní škola, Brno, Masarova 11" },
+      "geometry": { "type": "Point", "coordinates": [16.6796, 49.2103] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_009", "school_name": "Základní škola, Brno, Novolíšeňská 10" },
+      "geometry": { "type": "Point", "coordinates": [16.6733, 49.2059] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_010", "school_name": "Základní škola a mateřská škola, Brno, Horníkova 1" },
+      "geometry": { "type": "Point", "coordinates": [16.6826, 49.2013] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_011", "school_name": "Základní škola, Brno, Holzova 1" },
+      "geometry": { "type": "Point", "coordinates": [16.6804, 49.198] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_012", "school_name": "Základní škola, Brno, Herčíkova 19" },
+      "geometry": { "type": "Point", "coordinates": [16.599, 49.222] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_013", "school_name": "Základní škola Brno, Palackého třída 68" },
+      "geometry": { "type": "Point", "coordinates": [16.604, 49.216] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_014", "school_name": "Základní škola, Brno, Košinova 22" },
+      "geometry": { "type": "Point", "coordinates": [16.601, 49.22] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_015", "school_name": "Základní škola, Brno, Slovanské nám. 2" },
+      "geometry": { "type": "Point", "coordinates": [16.598, 49.217] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_016", "school_name": "Základní škola a Mateřská škola, Brno, Staňkova 14" },
+      "geometry": { "type": "Point", "coordinates": [16.6014, 49.2095] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_017", "school_name": "Základní škola Brno, Tuháčkova 25" },
+      "geometry": { "type": "Point", "coordinates": [16.6435, 49.1792] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_018", "school_name": "Základní škola a Mateřská škola Brno, Pavlovská 16" },
+      "geometry": { "type": "Point", "coordinates": [16.6938, 49.2279] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_019", "school_name": "Základní škola Brno, Vejrostova 1" },
+      "geometry": { "type": "Point", "coordinates": [16.5234, 49.2108] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_020", "school_name": "Základní škola a Mateřská škola Brno, Blažkova 9" },
+      "geometry": { "type": "Point", "coordinates": [16.6582, 49.2242] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_021", "school_name": "Základní škola Brno, Janouškova 2" },
+      "geometry": { "type": "Point", "coordinates": [16.6245, 49.2154] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_022", "school_name": "Základní škola Brno, Sekaninova 1" },
+      "geometry": { "type": "Point", "coordinates": [16.6161, 49.1853] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_023", "school_name": "Základní škola, Brno, Bakalovo nábřeží 8" },
+      "geometry": { "type": "Point", "coordinates": [16.5983, 49.1901] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_024", "school_name": "Základní škola, Brno, Úvoz 55" },
+      "geometry": { "type": "Point", "coordinates": [16.5918, 49.1978] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_025", "school_name": "Základní škola a mateřská škola Brno, nám. 28. října 22" },
+      "geometry": { "type": "Point", "coordinates": [16.6142, 49.2006] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_026", "school_name": "Základní škola a Mateřská škola Brno, Merhautova 37" },
+      "geometry": { "type": "Point", "coordinates": [16.6202, 49.2094] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_027", "school_name": "ZŠ Labská 27" },
+      "geometry": { "type": "Point", "coordinates": [16.5653, 49.1783] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_028", "school_name": "Základní škola, Brno, Jihomoravské nám. 2" },
+      "geometry": { "type": "Point", "coordinates": [16.6553, 49.1754] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_029", "school_name": "Základní škola, Brno, Laštůvkova 77" },
+      "geometry": { "type": "Point", "coordinates": [16.5152, 49.2156] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "SE_030", "school_name": "Základní škola, Brno, Sirotkova 36" },
+      "geometry": { "type": "Point", "coordinates": [16.5783, 49.2091] }
+    }
+  ]
+}

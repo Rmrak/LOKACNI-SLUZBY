@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head><meta charset="utf-8"><title>Diagnostika – Safe & Cool Routes</title></head>
+<body style="font-family:system-ui">
+<h2>Diagnostika</h2>
+<ol>
+  <li>Server běží: <strong id="srv">?</strong></li>
+  <li>Načtení <code>data/Graph_Grid_Brno.json</code>: <strong id="graph">?</strong></li>
+</ol>
+<pre id="out" style="background:#f5f5f5;padding:10px;max-height:240px;overflow:auto"></pre>
+<script>
+  function log(msg){ const p=document.getElementById('out'); p.textContent += msg+"\n"; }
+  const from = location.protocol;
+  document.getElementById('srv').textContent = from.startsWith('http') ? 'ANO (OK)' : 'NE (spouštíš z file://)';
+  if (!from.startsWith('http')) log('Spouštíš soubor přímo bez serveru. Otevři http://localhost:8000 (viz návod).');
+  fetch('data/Graph_Grid_Brno.json').then(r=>{ 
+      document.getElementById('graph').textContent = r.ok ? 'OK' : ('HTTP '+r.status);
+      return r.text();
+  }).then(t=>log(t.substring(0,300)+'...')).catch(e=>{ document.getElementById('graph').textContent='CHYBA'; log(e); });
+</script>
+</body>
+</html>

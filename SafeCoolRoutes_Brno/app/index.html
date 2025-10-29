@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Safe & Cool Routes Brno – Demo</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  html, body, #map { height: 100%; margin: 0; }
+  .controls {
+    position: absolute; top: 10px; left: 10px; z-index: 1000;
+    background: white; padding: 10px; border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3); font-family: system-ui, sans-serif; font-size: 14px;
+  }
+  .legend {
+    position: absolute; bottom: 10px; left: 10px; z-index: 1000;
+    background: white; padding: 10px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    font-family: system-ui, sans-serif; font-size: 12px;
+  }
+  button, select { margin-top: 6px; width: 100%; }
+  .badge { display: inline-block; padding: 2px 6px; border-radius: 3px; background: #eee; margin-left: 6px;}
+  #status { position:absolute;top:10px;right:10px;z-index:1000;background:white;
+            padding:8px 10px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,0.3);font-family:system-ui,sans-serif;font-size:12px; }
+  a.small { font-size:12px; margin-left:6px; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <div><strong>Safe & Cool Routes – Brno</strong>
+    <a class="small" href="health.html" target="_blank">diagnostika</a>
+  </div>
+  <div>Režim trasy:</div>
+  <select id="routeType">
+    <option value="length_m">Nejkratší</option>
+    <option value="risk_cost">Bezpečnější</option>
+    <option value="heat_cost">Víc ve stínu</option>
+  </select>
+  <button id="startBtn">Nastavit START (klik do mapy)</button>
+  <button id="destBtn">Nastavit CÍL (klik do mapy)</button>
+  <button id="goBtn">Naplánovat</button>
+  <div style="margin-top:6px">
+    <label><input type="checkbox" id="toggleHazards" checked> Riziková místa (tým)</label><br/>
+    <label><input type="checkbox" id="toggleCool" checked> Chladná místa (tým)</label><br/>
+    <label><input type="checkbox" id="toggleSchools" checked> Vstupy do škol (tým)</label><br/>
+    <label><input type="checkbox" id="toggleGrid" > Síť (debug)</label>
+  </div>
+  <div id="metrics" style="margin-top:8px;"></div>
+</div>
+<div id="status">Načítám data…</div>
+<div id="map"></div>
+<div class="legend">
+  <div><strong>Legenda</strong></div>
+  <div>🔴 riziko | 🔵 cool | 🏫 škola</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map = L.map('map').setView([49.21, 16.61], 12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19, attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+
+let startPoint=null, destPoint=null, settingStart=false, settingDest=false;
+const startMarker = L.marker([0,0], {opacity:0});
+const destMarker  = L.marker([0,0], {opacity:0});
+const routeLayer = L.geoJSON(null, {style: {weight:5}}).addTo(map);
+const gridLayer  = L.layerGroup().addTo(map);
+
+// Týmové vrstvy – lokální fallback
+const hazardsLayer = L.geoJSON(null, {
+  pointToLayer: (f, latlng) => L.circleMarker(latlng, {radius:5, weight:1, color:'#c00', fillOpacity:0.8})
+    .bindTooltip(`Riziko: ${f.properties.type} (sev ${f.properties.severity})`)
+});
+const coolLayer = L.geoJSON(null, {
+  pointToLayer: (f, latlng) => L.circleMarker(latlng, {radius:5, weight:1, color:'#06c', fillOpacity:0.8})
+    .bindTooltip(`Cool: ${f.properties.type}`)
+});
+const schoolsLayer = L.geoJSON(null, {
+  pointToLayer: (f, latlng) => L.circleMarker(latlng, {radius:5, weight:1, color:'#333', fillOpacity:0.8})
+    .bindTooltip(`${f.properties.school_name}`)
+});
+
+document.getElementById('startBtn').onclick = () => { settingStart = true; settingDest = false; };
+document.getElementById('destBtn').onclick = () => { settingDest = true; settingStart = false; };
+document.getElementById('goBtn').onclick    = () => { planRoute(); };
+
+map.on('click', (e) => {
+  if (settingStart) {
+    startPoint = e.latlng; startMarker.setLatLng(startPoint).setOpacity(1).addTo(map).bindPopup("Start");
+    settingStart = false;
+  } else if (settingDest) {
+    destPoint  = e.latlng; destMarker.setLatLng(destPoint).setOpacity(1).addTo(map).bindPopup("Cíl");
+    settingDest = false;
+  }
+});
+
+document.getElementById('toggleHazards').onchange = e => e.target.checked ? hazardsLayer.addTo(map) : map.removeLayer(hazardsLayer);
+document.getElementById('toggleCool').onchange    = e => e.target.checked ? coolLayer.addTo(map) : map.removeLayer(coolLayer);
+document.getElementById('toggleSchools').onchange = e => e.target.checked ? schoolsLayer.addTo(map) : map.removeLayer(schoolsLayer);
+document.getElementById('toggleGrid').onchange    = e => { if (e.target.checked) gridLayer.addTo(map); else gridLayer.clearLayers(); };
+
+// Haversine
+function haversine(lat1, lon1, lat2, lon2) {
+  const R=6371000.0, toRad=d=>d*Math.PI/180;
+  const phi1=toRad(lat1), phi2=toRad(lat2), dphi=toRad(lat2-lat1), dl=toRad(lon2-lon1);
+  const a = Math.sin(dphi/2)**2 + Math.cos(phi1)*Math.cos(phi2)*Math.sin(dl/2)**2;
+  return 2*R*Math.asin(Math.sqrt(a));
+}
+
+// Načti graf sítě
+let graph=null, nodesById=null, adj=null;
+function renderGrid() {
+  gridLayer.clearLayers();
+  if (!graph) return;
+  for (const e of graph.edges) {
+    const a = nodesById[e.from], b = nodesById[e.to];
+    L.polyline([[a.lat,a.lon],[b.lat,b.lon]], {weight:1, opacity:0.2}).addTo(gridLayer);
+  }
+}
+function nearestNode(lat, lon) {
+  let best=null, bestd=Infinity;
+  for (const n of graph.nodes) {
+    const d=haversine(lat,lon,n.lat,n.lon);
+    if (d<bestd) { bestd=d; best=n; }
+  }
+  return best;
+}
+function dijkstra(startId, goalId, weightKey) {
+  const dist={[startId]:0}, prev={}, heap=[[0,startId]];
+  function popMin(){ let mi=0; for(let i=1;i<heap.length;i++) if(heap[i][0]<heap[mi][0]) mi=i; return heap.splice(mi,1)[0]; }
+  while(heap.length){
+    const [curd,u]=popMin(); if(u===goalId) break; if(curd>(dist[u]??Infinity)) continue;
+    for(const e of adj[u]||[]){
+      let w=e.length_m;
+      if(weightKey==='risk_cost') w=e.risk_cost+0.001*e.length_m;
+      else if(weightKey==='heat_cost') w=e.heat_cost+0.001*e.length_m;
+      const nd=curd+w;
+      if(nd < (dist[e.to]??Infinity)){ dist[e.to]=nd; prev[e.to]=e; heap.push([nd,e.to]); }
+    }
+  }
+  const path=[]; let u=goalId;
+  while(u!==startId){ const e=prev[u]; if(!e) return []; path.push(e); u=e.from; }
+  return path.reverse();
+}
+function pathToGeoJSON(path){
+  const coords=[], m={length:0,s:0,h:0};
+  for(const e of path){
+    const a=nodesById[e.from]; coords.push([a.lon,a.lat]);
+    m.length+=e.length_m; m.s+=e.safety_score; m.h+=e.heat_score;
+  }
+  if(path.length){ const b=nodesById[path[path.length-1].to]; coords.push([b.lon,b.lat]); }
+  const avgS = path.length ? (m.s/path.length).toFixed(1) : null;
+  const avgH = path.length ? (m.h/path.length).toFixed(1) : null;
+  return {"type":"Feature","properties":{"length_m":Math.round(m.length),"avg_safety":avgS,"avg_heat":avgH},
+          "geometry":{"type":"LineString","coordinates":coords}};
+}
+function planRoute(){
+  if(!startPoint || !destPoint){ alert("Klikněte pro nastavení START a CÍL."); return; }
+  if(!graph){ alert("Síť ještě není načtena."); return; }
+  const s=nearestNode(startPoint.lat,startPoint.lng), t=nearestNode(destPoint.lat,destPoint.lng);
+  const path = dijkstra(s.id, t.id, document.getElementById('routeType').value);
+  routeLayer.clearLayers();
+  if(path.length===0){ alert("Trasa nebyla nalezena."); return; }
+  const gj=pathToGeoJSON(path); routeLayer.addData(gj);
+  const coords=gj.geometry.coordinates.map(c=>[c[1],c[0]]); L.polyline(coords).bringToFront();
+  document.getElementById('metrics').innerHTML =
+    `Délka: <span class="badge">${gj.properties.length_m} m</span>
+     | SafetyScore ⌀: <span class="badge">${gj.properties.avg_safety}</span>
+     | HeatScore ⌀: <span class="badge">${gj.properties.avg_heat}</span>`;
+}
+
+// 1) Načti síť
+fetch('data/Graph_Grid_Brno.json')
+ .then(r=>{ if(!r.ok) throw new Error('Chyba při načítání sítě'); return r.json(); })
+ .then(g=>{
+    graph=g; nodesById={}; adj={};
+    for(const n of graph.nodes) nodesById[n.id]=n;
+    for(const e of graph.edges){ if(!adj[e.from]) adj[e.from]=[]; adj[e.from].push(e); }
+    renderGrid(); document.getElementById('status').innerHTML='Data načtena ✓';
+ })
+ .catch(e=>{ console.error(e); document.getElementById('status').innerHTML='Chyba dat ✗'; alert('Nepodařilo se načíst síť.'); });
+
+// 2) Týmové vrstvy – nejdřív z configu, jinak fallback na ./data
+function withFallback(url, fallback){ return fetch(url).then(r=>r.ok?r.json():fetch(fallback).then(x=>x.json())) }
+function addTeamLayers(cfg){
+  const team = (cfg && cfg.team_datasets)||{};
+  const hz = team.hazards?.url || 'data/HazardObservations_Brno.geojson';
+  const cs = team.coolspots?.url || 'data/CoolSpots_Brno.geojson';
+  const se = team.school_entrances?.url || 'data/SchoolEntrances_Brno.geojson';
+  withFallback(hz,'data/HazardObservations_Brno.geojson').then(gj=>hazardsLayer.addData(gj).addTo(map)).catch(console.warn);
+  withFallback(cs,'data/CoolSpots_Brno.geojson').then(gj=>coolLayer.addData(gj).addTo(map)).catch(console.warn);
+  withFallback(se,'data/SchoolEntrances_Brno.geojson').then(gj=>schoolsLayer.addData(gj).addTo(map)).catch(console.warn);
+}
+
+// 3) Živá městská data (volitelné)
+function addCityPortal(cfg){
+  const live = (cfg && cfg.city_portal_live)||{};
+  function addGeo(url, layer, name){
+    if(!url) return;
+    fetch(url).then(r=>r.json()).then(gj=>{ layer.addData(gj).addTo(map); console.log('Loaded live:', name); })
+             .catch(e=>console.warn('Live layer failed', name, e));
+  }
+  addGeo(live.pedestrian_crossings?.url, L.geoJSON(null, {pointToLayer:(f,latlng)=>L.circleMarker(latlng,{radius:3,color:'#000'})}).bindPopup('Přechod'), 'Přechody');
+  addGeo(live.sidewalks?.url,             L.geoJSON(null, {style:{color:'#888'}}), 'Chodníky');
+  addGeo(live.street_lighting_poles?.url, L.geoJSON(null, {pointToLayer:(f,latlng)=>L.circleMarker(latlng,{radius:2,color:'#ff0'})}), 'VO');
+  const noiseUrl = live.noise_2022_wms?.url;
+  if (noiseUrl) {
+    if (noiseUrl.includes('format=geojson') || noiseUrl.endsWith('.geojson')){
+      fetch(noiseUrl).then(r=>r.json()).then(gj=>L.geoJSON(gj, {style:{color:'#f80', weight:1, opacity:0.5, fillOpacity:0.15}}).addTo(map));
+    } else if (L.tileLayer.wms) {
+      L.tileLayer.wms(noiseUrl, {layers:'', format:'image/png', transparent:true, opacity:0.5}).addTo(map);
+    }
+  }
+}
+
+// 4) Externí (volitelné) – GeoJSON
+function addExternal(cfg){
+  const ext = (cfg && cfg.external_live)||{};
+  function add(url, name, style){
+    if(!url) return;
+    fetch(url).then(r=>r.json()).then(gj=>L.geoJSON(gj, style||{}).addTo(map)).catch(e=>console.warn('External failed', name, e));
+  }
+  add(ext.chmi_air_quality?.url, 'CHMI AQ', {pointToLayer:(f,latlng)=>L.circleMarker(latlng,{radius:3,color:'#a0f'})});
+  add(ext.csuz_census_2021?.url, 'ČSÚ 2021', {style:{color:'#0a0', weight:1, fillOpacity:0.2}});
+  add(ext.osm_network?.url, 'OSM network', {style:{color:'#05a', weight:1}});
+}
+
+// Načti konfiguraci a spusť vrstvy
+fetch('layers.city.json').then(r=>r.json()).then(cfg=>{
+  addTeamLayers(cfg);
+  addCityPortal(cfg);
+  addExternal(cfg);
+}).catch(_=>{
+  // když není config, načti aspoň lokální týmové vrstvy
+  addTeamLayers(null);
+});
+</script>
+</body>
+</html>

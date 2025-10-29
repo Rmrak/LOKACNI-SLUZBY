@@ -1,0 +1,425 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_001",
+        "school_name": "ZŠ Brno 1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.636800554308486,
+          49.165687957972864
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_002",
+        "school_name": "ZŠ Brno 2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.53575990652187,
+          49.24513425453441
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_003",
+        "school_name": "ZŠ Brno 3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.71821841645313,
+          49.16679608633757
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_004",
+        "school_name": "ZŠ Brno 4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.73656710926269,
+          49.20037755513182
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_005",
+        "school_name": "ZŠ Brno 5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.653151383226657,
+          49.216967541013815
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_006",
+        "school_name": "ZŠ Brno 6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.53885618326382,
+          49.163974166228904
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_007",
+        "school_name": "ZŠ Brno 7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.65000219248414,
+          49.22573731644725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_008",
+        "school_name": "ZŠ Brno 8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.579976109988834,
+          49.19163698459767
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_009",
+        "school_name": "ZŠ Brno 9"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.59226228844298,
+          49.22697259747698
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_010",
+        "school_name": "ZŠ Brno 10"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.550102004889315,
+          49.186561451253134
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_011",
+        "school_name": "ZŠ Brno 11"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.625161651691204,
+          49.224550078883766
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_012",
+        "school_name": "ZŠ Brno 12"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.73521888611231,
+          49.25290183317055
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_013",
+        "school_name": "ZŠ Brno 13"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.66286662876341,
+          49.16093154568842
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_014",
+        "school_name": "ZŠ Brno 14"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.542995687252656,
+          49.216299364563895
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_015",
+        "school_name": "ZŠ Brno 15"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.636353479631214,
+          49.21376344041016
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_016",
+        "school_name": "ZŠ Brno 16"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.60027203204184,
+          49.173245657036645
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_017",
+        "school_name": "ZŠ Brno 17"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.57618541579687,
+          49.166879131406
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_018",
+        "school_name": "ZŠ Brno 18"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.620782451791772,
+          49.18849873912166
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_019",
+        "school_name": "ZŠ Brno 19"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.589578942885144,
+          49.21432179622616
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_020",
+        "school_name": "ZŠ Brno 20"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.70563298695098,
+          49.258385331025146
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_021",
+        "school_name": "ZŠ Brno 21"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.673608536853894,
+          49.21289406926022
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_022",
+        "school_name": "ZŠ Brno 22"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.734303889070297,
+          49.215460228248965
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_023",
+        "school_name": "ZŠ Brno 23"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.721969201943928,
+          49.170358650191815
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_024",
+        "school_name": "ZŠ Brno 24"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.724633922611314,
+          49.18644659214871
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_025",
+        "school_name": "ZŠ Brno 25"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.555753019248247,
+          49.2342416683981
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_026",
+        "school_name": "ZŠ Brno 26"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.568444820605595,
+          49.18817562714579
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_027",
+        "school_name": "ZŠ Brno 27"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.678124339624304,
+          49.194288028779326
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_028",
+        "school_name": "ZŠ Brno 28"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.636244083362538,
+          49.24529128153919
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_029",
+        "school_name": "ZŠ Brno 29"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.72887658063027,
+          49.185112125206985
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "SE_030",
+        "school_name": "ZŠ Brno 30"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.665885422881114,
+          49.16507988936625
+        ]
+      }
+    }
+  ]
+}

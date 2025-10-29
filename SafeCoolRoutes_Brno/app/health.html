@@ -1,0 +1,75 @@
+
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Health</title>
+<style>
+ body {{ font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 20px; }}
+ code {{ background:#f5f5f5; padding:2px 4px; border-radius:4px; }}
+ .ok {{ color: #0a0; }} .err {{ color: #c00; }} .warn {{ color: #b36b00; }}
+</style>
+</head>
+<body>
+<h1>Health check</h1>
+<ol>
+  <li>Server běží?</li>
+  <li>Načte se lokální <code>Graph_Grid_Brno.json</code>?</li>
+  <li>Jdou stáhnout <strong>živá městská data</strong> (5 vrstev)?</li>
+</ol>
+
+<pre id="out">Načítám…</pre>
+
+<script>
+const results = [];
+function log(msg, cls='') {{ 
+  const pre = document.getElementById('out'); 
+  pre.innerHTML += (cls? `<span class="${{cls}}">`:'') + msg + (cls? '</span>':'') + '\n'; 
+}}
+
+async function test() {{ 
+  try {{ 
+    log('1) Server OK (tato stránka se zobrazuje).', 'ok'); 
+  }} catch(e) {{ log('1) Server problém', 'err'); }}
+  try {{ 
+    const r = await fetch('data/Graph_Grid_Brno.json'); 
+    const j = await r.json();
+    log('2) Lokální síť načtena: ' + j.nodes.length + ' uzlů, ' + j.edges.length + ' hran.', 'ok');
+  }} catch(e) {{ log('2) Problém s lokální sítí', 'err'); }}
+  const cfg = {
+  "city_portal_live": {
+    "pedestrian_crossings": {
+      "url": "https://hub.arcgis.com/api/v3/datasets/23a4cf93f04641d4902ea57697bc8377_0/downloads/data?format=geojson&spatialRefId=4326"
+    },
+    "sidewalks": {
+      "url": "https://hub.arcgis.com/api/v3/datasets/388a671c5bdb43dba171cc207dbb0657_0/downloads/data?format=geojson&spatialRefId=4326"
+    },
+    "street_lighting_poles": {
+      "url": "https://hub.arcgis.com/api/v3/datasets/462d3e4e68984538a29e715a885d770e_0/downloads/data?format=geojson&spatialRefId=4326"
+    },
+    "noise_2022_wms": {
+      "url": "https://hub.arcgis.com/api/v3/datasets/a5ad8e597ff64bfb8a0d794e78c10512_0/downloads/data?format=geojson&spatialRefId=4326"
+    },
+    "urban_greenery_trees": {
+      "url": "https://hub.arcgis.com/api/v3/datasets/1c69f0c46f624344a22535860cfa5a0b_0/downloads/data?format=geojson&spatialRefId=4326"
+    }
+  }
+};
+  const live = cfg.city_portal_live;
+  async function tryUrl(name, url) {{ 
+     try {{ 
+        const r = await fetch(url, {{mode:'cors'}}); 
+        const j = await r.json();
+        const featCount = (j.features && j.features.length) ? j.features.length : (j.count || 'OK');
+        log('3) ' + name + ': OK (' + featCount + ' prvků)', 'ok');
+     }} catch(e) {{ 
+        log('3) ' + name + ': problem → ' + e, 'warn');
+     }} 
+  }}
+  await tryUrl('Přechody', live.pedestrian_crossings.url);
+  await tryUrl('Chodníky', live.sidewalks.url);
+  await tryUrl('VO stožáry', live.street_lighting_poles.url);
+  await tryUrl('Hluk 2022', live.noise_2022_wms.url);
+  await tryUrl('Zeleň (stromy/keře)', live.urban_greenery_trees.url);
+}}
+document.getElementById('out').textContent = '';
+test();
+</script>
+</body></html>

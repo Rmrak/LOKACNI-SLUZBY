@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Safe & Cool Routes Brno – LIVE</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  html, body, #map { height: 100%; margin: 0; }
+  .controls { position:absolute; top:10px; left:10px; z-index:1000; background:white; padding:10px; border-radius:6px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.3); font-family: system-ui, sans-serif; font-size:14px; }
+  button, select { margin-top:6px; width:100%; }
+</style>
+</head>
+<body>
+<div class="controls">
+  <div><strong>Safe & Cool Routes – Brno (LIVE only)</strong></div>
+  <div>Režim trasy:</div>
+  <select id="routeType">
+    <option value="length_m">Nejkratší</option>
+    <option value="risk_cost">Bezpečnější</option>
+    <option value="heat_cost">Víc ve stínu</option>
+  </select>
+  <button id="startBtn">Nastavit START</button>
+  <button id="destBtn">Nastavit CÍL</button>
+  <button id="goBtn">Naplánovat</button>
+</div>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map = L.map('map').setView([49.21, 16.61], 12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
+
+let startPoint=null, destPoint=null;
+document.getElementById('startBtn').onclick=()=> { map.once('click', e=> {startPoint=e.latlng; L.marker(startPoint).addTo(map).bindPopup('Start').openPopup();}); };
+document.getElementById('destBtn').onclick=()=> { map.once('click', e=> {destPoint=e.latlng; L.marker(destPoint).addTo(map).bindPopup('Cíl').openPopup();}); };
+document.getElementById('goBtn').onclick=()=> alert('Routing běží v plné appce (index.html). Tato LIVE stránka pouze zobrazuje živé vrstvy.');
+
+// Live layers from config
+const live = {"pedestrian_crossings": {"url": "https://hub.arcgis.com/api/v3/datasets/23a4cf93f04641d4902ea57697bc8377_0/downloads/data?format=geojson&spatialRefId=4326"}, "sidewalks": {"url": "https://hub.arcgis.com/api/v3/datasets/388a671c5bdb43dba171cc207dbb0657_0/downloads/data?format=geojson&spatialRefId=4326"}, "street_lighting_poles": {"url": "https://hub.arcgis.com/api/v3/datasets/462d3e4e68984538a29e715a885d770e_0/downloads/data?format=geojson&spatialRefId=4326"}, "noise_2022_wms": {"url": "https://hub.arcgis.com/api/v3/datasets/a5ad8e597ff64bfb8a0d794e78c10512_0/downloads/data?format=geojson&spatialRefId=4326"}, "urban_greenery_trees": {"url": "https://hub.arcgis.com/api/v3/datasets/1c69f0c46f624344a22535860cfa5a0b_0/downloads/data?format=geojson&spatialRefId=4326"}};
+
+function addGeo(name, url, style) {
+  fetch(url).then(r=>r.json()).then(gj=>L.geoJSON(gj, style||{}).addTo(map)).catch(e=>console.warn(name, e));
+}
+
+addGeo('Přechody', live.pedestrian_crossings.url, {style:{color:'#000'}, pointToLayer:(f,latlng)=>L.circleMarker(latlng,{radius:3,color:'#000'})});
+addGeo('Chodníky', live.sidewalks.url, {style:{color:'#888'}});
+addGeo('VO', live.street_lighting_poles.url, {pointToLayer:(f,latlng)=>L.circleMarker(latlng,{radius:2,color:'#ff0'})});
+
+// Noise: allow GeoJSON
+addGeo('Hluk 2022', live.noise_2022_wms.url, {style:{color:'#f80', weight:1, opacity:0.5, fillOpacity:0.15}});
+addGeo('Zeleň', live.urban_greenery_trees.url, {pointToLayer:(f,latlng)=>L.circleMarker(latlng,{radius:3,color:'#070'})});
+</script>
+</body>
+</html>

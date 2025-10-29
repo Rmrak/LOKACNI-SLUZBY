@@ -1,0 +1,37 @@
+{
+  "city_portal_live": {
+    "pedestrian_crossings": {
+      "url": "https://hub.arcgis.com/api/v3/datasets/23a4cf93f04641d4902ea57697bc8377_0/downloads/data?format=geojson&spatialRefId=4326"
+    },
+    "sidewalks": {
+      "url": "https://hub.arcgis.com/api/v3/datasets/388a671c5bdb43dba171cc207dbb0657_0/downloads/data?format=geojson&spatialRefId=4326"
+    },
+    "street_lighting_poles": {
+      "url": "https://hub.arcgis.com/api/v3/datasets/462d3e4e68984538a29e715a885d770e_0/downloads/data?format=geojson&spatialRefId=4326"
+    },
+    "noise_2022_wms": {
+      "url": "https://hub.arcgis.com/api/v3/datasets/a5ad8e597ff64bfb8a0d794e78c10512_0/downloads/data?format=geojson&spatialRefId=4326"
+    },
+    "urban_greenery_trees": {
+      "url": "https://hub.arcgis.com/api/v3/datasets/1c69f0c46f624344a22535860cfa5a0b_0/downloads/data?format=geojson&spatialRefId=4326"
+    }
+  },
+
+  "team_datasets": {
+    "hazards":           { "url": "data/HazardObservations_Brno.geojson" },
+    "school_entrances":  { "url": "data/SchoolEntrances_Brno.geojson" },
+    "coolspots":         { "url": "data/CoolSpots_Brno.geojson" }
+  },
+
+  "external_local": {
+    "chmi_air_quality":  { "url": "data/CHMU_AirQuality_Sample.geojson" },
+    "csuz_census_2021":  { "url": "data/CSU_VulnerabilityIndex_Sample.geojson" }
+    
+  },
+
+  "external_live": {
+    "chmi_air_quality":  { "url": "" },  /* sem můžeš přidat živé CHMI API/GeoJSON, bude-li k dispozici s CORS */
+    "csuz_census_2021":  { "url": "" },  /* např. publikované územní jednotky s indikátory 2021 jako FeatureService/GeoJSON */
+    "osm_network":       { "url": "" }   /* např. vlastní hostovaný GeoJSON/FeatureService s pěší/cyklo sítí */
+  }
+}

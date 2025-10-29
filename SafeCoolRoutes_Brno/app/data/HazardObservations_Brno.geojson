@@ -1,0 +1,605 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_001",
+        "type": "poor_lighting",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.525752473701214,
+          49.223942679845784
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_002",
+        "type": "dangerous_intersection",
+        "severity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.68938837925772,
+          49.182321073814876
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_003",
+        "type": "missing_crossing",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.52731001628081,
+          49.219049251244904
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_004",
+        "type": "dangerous_intersection",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.658464307681495,
+          49.18326608933907
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_005",
+        "type": "broken_sidewalk",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.681304743925754,
+          49.231601961292235
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_006",
+        "type": "missing_crossing",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.583983862893053,
+          49.20492090462838
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_007",
+        "type": "speeding",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.59825761879914,
+          49.22981393949882
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_008",
+        "type": "missing_crossing",
+        "severity": 4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.597416745375902,
+          49.255721307220675
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_009",
+        "type": "dangerous_intersection",
+        "severity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.714923704259917,
+          49.169671637683344
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_010",
+        "type": "dangerous_intersection",
+        "severity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.68783831093958,
+          49.240712827327435
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_011",
+        "type": "dangerous_intersection",
+        "severity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.60706290675792,
+          49.25731157639793
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_012",
+        "type": "poor_lighting",
+        "severity": 5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.662259543043778,
+          49.242940466425296
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_013",
+        "type": "speeding",
+        "severity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.53599768422946,
+          49.17922885902566
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_014",
+        "type": "missing_crossing",
+        "severity": 4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.716723075833485,
+          49.25852215206607
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_015",
+        "type": "poor_lighting",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.66620742218081,
+          49.18779736031101
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_016",
+        "type": "poor_lighting",
+        "severity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.56818661707744,
+          49.19701809671169
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_017",
+        "type": "speeding",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.55936188908556,
+          49.2209131005667
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_018",
+        "type": "dangerous_intersection",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.582088000160383,
+          49.20622602118511
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_019",
+        "type": "missing_crossing",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.713855941643658,
+          49.228461425098985
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_020",
+        "type": "broken_sidewalk",
+        "severity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.70516053417738,
+          49.242180259400676
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_021",
+        "type": "dangerous_intersection",
+        "severity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.730021308562677,
+          49.166618860521154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_022",
+        "type": "broken_sidewalk",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.634823189683225,
+          49.18126265440541
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_023",
+        "type": "dangerous_intersection",
+        "severity": 5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.576724326769614,
+          49.186488016649804
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_024",
+        "type": "dangerous_intersection",
+        "severity": 4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.654454777751415,
+          49.18627416085229
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_025",
+        "type": "speeding",
+        "severity": 5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.749384928937506,
+          49.19619964437136
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_026",
+        "type": "missing_crossing",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.69382989623276,
+          49.20935158348896
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_027",
+        "type": "broken_sidewalk",
+        "severity": 5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.70217825380348,
+          49.22274460417031
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_028",
+        "type": "broken_sidewalk",
+        "severity": 5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.607772435896504,
+          49.16635277061519
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_029",
+        "type": "missing_crossing",
+        "severity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.647241956129516,
+          49.18514141199818
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_030",
+        "type": "poor_lighting",
+        "severity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.643503175994024,
+          49.22817103690266
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_031",
+        "type": "broken_sidewalk",
+        "severity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.619996007653892,
+          49.17115521735958
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_032",
+        "type": "poor_lighting",
+        "severity": 5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.721446176286985,
+          49.25538159275211
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_033",
+        "type": "missing_crossing",
+        "severity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.636766785158994,
+          49.2361962199052
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_034",
+        "type": "speeding",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.636762462854854,
+          49.244166934817244
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_035",
+        "type": "dangerous_intersection",
+        "severity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.557156278223225,
+          49.19739138525911
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_036",
+        "type": "missing_crossing",
+        "severity": 3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.63237931284666,
+          49.21989445844602
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_037",
+        "type": "poor_lighting",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.711283071753073,
+          49.24787218778231
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_038",
+        "type": "missing_crossing",
+        "severity": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.72194220781693,
+          49.16579251664942
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_039",
+        "type": "dangerous_intersection",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.70768534828662,
+          49.23319075948446
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "HZ_040",
+        "type": "dangerous_intersection",
+        "severity": 2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.629314946962708,
+          49.172839146449974
+        ]
+      }
+    }
+  ]
+}

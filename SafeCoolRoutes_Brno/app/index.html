@@ -3,25 +3,29 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Safe & Cool Routes Brno – Demo</title>
+<title>Safe & Cool Routes Brno – Demo v2</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
-  html, body, #map { height: 100%; margin: 0; }
+  html, body, #map { height: 100%; margin: 0; padding: 0; }
   .controls {
     position: absolute; top: 10px; left: 10px; z-index: 1000;
     background: white; padding: 10px; border-radius: 6px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.3); font-family: system-ui, sans-serif; font-size: 14px;
+    max-width: 250px;
   }
   .legend {
     position: absolute; bottom: 10px; left: 10px; z-index: 1000;
     background: white; padding: 10px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     font-family: system-ui, sans-serif; font-size: 12px;
   }
-  button, select { margin-top: 6px; width: 100%; }
-  .badge { display: inline-block; padding: 2px 6px; border-radius: 3px; background: #eee; margin-left: 6px;}
-  #status { position:absolute;top:10px;right:10px;z-index:1000;background:white;
+  button, select { margin-top: 6px; width: 100%; padding: 5px; box-sizing: border-box; }
+  label { display: block; margin-top: 4px; }
+  .badge { display: inline-block; padding: 2px 6px; border-radius: 3px; background: #eee; margin-left: 6px; font-weight: bold;}
+  #status { position:absolute;top:10px;right:10px;z-index:1000;background:rgba(255,255,255,0.8);
             padding:8px 10px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,0.3);font-family:system-ui,sans-serif;font-size:12px; }
-  a.small { font-size:12px; margin-left:6px; }
+  a.small { font-size:12px; margin-left:6px; color: #555; }
+  #metrics { font-size: 11px; margin-top: 8px; line-height: 1.6; }
+  #metrics span.badge { min-width: 30px; text-align: center; display: inline-block; }
 </style>
 </head>
 <body>
@@ -31,75 +35,125 @@
   </div>
   <div>Režim trasy:</div>
   <select id="routeType">
-    <option value="length_m">Nejkratší</option>
-    <option value="risk_cost">Bezpečnější</option>
-    <option value="heat_cost">Víc ve stínu</option>
+    <option value="length_m">📏 Nejkratší</option>
+    <option value="risk_cost">🛡️ Bezpečnější</option>
+    <option value="heat_cost">🌳 Víc ve stínu</option>
   </select>
-  <button id="startBtn">Nastavit START (klik do mapy)</button>
-  <button id="destBtn">Nastavit CÍL (klik do mapy)</button>
-  <button id="goBtn">Naplánovat</button>
-  <div style="margin-top:6px">
-    <label><input type="checkbox" id="toggleHazards" checked> Riziková místa (tým)</label><br/>
-    <label><input type="checkbox" id="toggleCool" checked> Chladná místa (tým)</label><br/>
-    <label><input type="checkbox" id="toggleSchools" checked> Vstupy do škol (tým)</label><br/>
+  <button id="startBtn">📍 Nastavit START (klik do mapy)</button>
+  <button id="destBtn">🏁 Nastavit CÍL (klik do mapy)</button>
+  <button id="goBtn" disabled>Naplánovat trasu</button>
+  <div style="margin-top:6px; border-top: 1px solid #eee; padding-top: 6px;">
+    <label><input type="checkbox" id="toggleHazards" checked> Riziková místa</label>
+    <label><input type="checkbox" id="toggleCool" checked> Chladná místa</label>
+    <label><input type="checkbox" id="toggleSchools" checked> Vstupy do škol</label>
+    <label><input type="checkbox" id="toggleLights" > Veř. osvětlení (město)</label>
+    <label><input type="checkbox" id="toggleGreenery" > Zeleň (město)</label>
     <label><input type="checkbox" id="toggleGrid" > Síť (debug)</label>
   </div>
-  <div id="metrics" style="margin-top:8px;"></div>
+  <div id="metrics">Zvolte start a cíl...</div>
 </div>
-<div id="status">Načítám data…</div>
+<div id="status">Načítám data...</div>
 <div id="map"></div>
 <div class="legend">
   <div><strong>Legenda</strong></div>
-  <div>🔴 riziko | 🔵 cool | 🏫 škola</div>
+  <div>🔴 Riziko | 🔵 Cool | 🏫 Škola | <span style="color: #ff0;">●</span> VO | <span style="color: #070;">●</span> Zeleň</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const map = L.map('map').setView([49.21, 16.61], 12);
+const map = L.map('map').setView([49.195, 16.608], 13); // Centered on Brno
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19, attribution: '&copy; OpenStreetMap'
+  maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
 let startPoint=null, destPoint=null, settingStart=false, settingDest=false;
-const startMarker = L.marker([0,0], {opacity:0});
-const destMarker  = L.marker([0,0], {opacity:0});
-const routeLayer = L.geoJSON(null, {style: {weight:5}}).addTo(map);
-const gridLayer  = L.layerGroup().addTo(map);
+const startMarker = L.marker([0,0], {draggable: true, opacity:0});
+const destMarker  = L.marker([0,0], {draggable: true, opacity:0});
+const routeLayer = L.geoJSON(null, {style: {weight:5, color: '#3388ff', opacity: 0.8}}).addTo(map);
+const gridLayer  = L.layerGroup(); // Initially not added to map
 
+startMarker.on('dragend', function(e) { startPoint = e.target.getLatLng(); checkPlanButton(); });
+destMarker.on('dragend', function(e) { destPoint = e.target.getLatLng(); checkPlanButton(); });
+
+// === Vrstvy ===
 // Týmové vrstvy – lokální fallback
 const hazardsLayer = L.geoJSON(null, {
-  pointToLayer: (f, latlng) => L.circleMarker(latlng, {radius:5, weight:1, color:'#c00', fillOpacity:0.8})
-    .bindTooltip(`Riziko: ${f.properties.type} (sev ${f.properties.severity})`)
+  pointToLayer: (f, latlng) => L.circleMarker(latlng, {radius:5, weight:1, color:'#c00', fillColor:'#c00', fillOpacity:0.7})
+    .bindTooltip(`Riziko: ${f.properties.type || 'N/A'} (Závažnost: ${f.properties.severity || 'N/A'})`)
 });
 const coolLayer = L.geoJSON(null, {
-  pointToLayer: (f, latlng) => L.circleMarker(latlng, {radius:5, weight:1, color:'#06c', fillOpacity:0.8})
-    .bindTooltip(`Cool: ${f.properties.type}`)
+  pointToLayer: (f, latlng) => L.circleMarker(latlng, {radius:5, weight:1, color:'#06c', fillColor:'#06c', fillOpacity:0.7})
+    .bindTooltip(`Cool Spot: ${f.properties.type || 'N/A'} (Kvalita stínu: ${f.properties.shade_quality || 'N/A'})`)
 });
 const schoolsLayer = L.geoJSON(null, {
-  pointToLayer: (f, latlng) => L.circleMarker(latlng, {radius:5, weight:1, color:'#333', fillOpacity:0.8})
-    .bindTooltip(`${f.properties.school_name}`)
+  pointToLayer: (f, latlng) => L.marker(latlng, { icon: L.divIcon({className: 'school-icon', html: '🏫', iconSize: [20, 20]})})
+    .bindTooltip(`${f.properties.school_name || 'Škola'}`)
 });
 
-document.getElementById('startBtn').onclick = () => { settingStart = true; settingDest = false; };
-document.getElementById('destBtn').onclick = () => { settingDest = true; settingStart = false; };
-document.getElementById('goBtn').onclick    = () => { planRoute(); };
+// Městské vrstvy (budou naplněny později)
+const streetLightingLayer = L.geoJSON(null, {
+  pointToLayer: (f, latlng) => L.circleMarker(latlng, {radius:2, weight:0, color:'#ff0', fillColor:'#ff0', fillOpacity:0.6})
+    .bindTooltip('Veřejné osvětlení')
+});
+const greeneryLayer = L.geoJSON(null, { // Zjednodušené zobrazení
+    pointToLayer: (f, latlng) => L.circleMarker(latlng, {radius:3, weight:0, color:'#070', fillColor:'#070', fillOpacity:0.6}),
+    style: { color: '#070', weight: 1, opacity: 0.5, fillOpacity: 0.1 }
+}).bindTooltip('Zeleň');
+
+// === Ovládací prvky ===
+const startBtn = document.getElementById('startBtn');
+const destBtn = document.getElementById('destBtn');
+const goBtn = document.getElementById('goBtn');
+const statusDiv = document.getElementById('status');
+const metricsDiv = document.getElementById('metrics');
+
+function updateButtonStyles() {
+    startBtn.style.fontWeight = settingStart ? 'bold' : 'normal';
+    startBtn.style.backgroundColor = settingStart ? '#dff' : '';
+    destBtn.style.fontWeight = settingDest ? 'bold' : 'normal';
+    destBtn.style.backgroundColor = settingDest ? '#dff' : '';
+}
+
+function checkPlanButton() {
+    goBtn.disabled = !(startPoint && destPoint && graph);
+    if (!goBtn.disabled) {
+        metricsDiv.innerHTML = "Připraveno k plánování.";
+    } else if (!graph) {
+         metricsDiv.innerHTML = "Čekám na načtení sítě...";
+    } else {
+         metricsDiv.innerHTML = "Zvolte start a cíl...";
+    }
+}
+
+startBtn.onclick = () => { settingStart = true; settingDest = false; updateButtonStyles(); map.getContainer().style.cursor = 'crosshair'; };
+destBtn.onclick = () => { settingDest = true; settingStart = false; updateButtonStyles(); map.getContainer().style.cursor = 'crosshair'; };
+goBtn.onclick    = () => { planRoute(); };
 
 map.on('click', (e) => {
   if (settingStart) {
-    startPoint = e.latlng; startMarker.setLatLng(startPoint).setOpacity(1).addTo(map).bindPopup("Start");
+    startPoint = e.latlng;
+    startMarker.setLatLng(startPoint).setOpacity(1).addTo(map).bindPopup("<b>Start</b><br/>Přesuň pro úpravu.").openPopup();
     settingStart = false;
   } else if (settingDest) {
-    destPoint  = e.latlng; destMarker.setLatLng(destPoint).setOpacity(1).addTo(map).bindPopup("Cíl");
+    destPoint  = e.latlng;
+    destMarker.setLatLng(destPoint).setOpacity(1).addTo(map).bindPopup("<b>Cíl</b><br/>Přesuň pro úpravu.").openPopup();
     settingDest = false;
   }
+  updateButtonStyles();
+  checkPlanButton();
+  map.getContainer().style.cursor = '';
 });
 
-document.getElementById('toggleHazards').onchange = e => e.target.checked ? hazardsLayer.addTo(map) : map.removeLayer(hazardsLayer);
-document.getElementById('toggleCool').onchange    = e => e.target.checked ? coolLayer.addTo(map) : map.removeLayer(coolLayer);
-document.getElementById('toggleSchools').onchange = e => e.target.checked ? schoolsLayer.addTo(map) : map.removeLayer(schoolsLayer);
-document.getElementById('toggleGrid').onchange    = e => { if (e.target.checked) gridLayer.addTo(map); else gridLayer.clearLayers(); };
+// Přepínače vrstev
+document.getElementById('toggleHazards').onchange = e => e.target.checked ? map.addLayer(hazardsLayer) : map.removeLayer(hazardsLayer);
+document.getElementById('toggleCool').onchange    = e => e.target.checked ? map.addLayer(coolLayer) : map.removeLayer(coolLayer);
+document.getElementById('toggleSchools').onchange = e => e.target.checked ? map.addLayer(schoolsLayer) : map.removeLayer(schoolsLayer);
+document.getElementById('toggleLights').onchange = e => e.target.checked ? map.addLayer(streetLightingLayer) : map.removeLayer(streetLightingLayer);
+document.getElementById('toggleGreenery').onchange = e => e.target.checked ? map.addLayer(greeneryLayer) : map.removeLayer(greeneryLayer);
+document.getElementById('toggleGrid').onchange    = e => { if (e.target.checked) { if(graph) renderGrid(); map.addLayer(gridLayer); } else map.removeLayer(gridLayer); };
 
-// Haversine
+
+// === Pomocné funkce ===
 function haversine(lat1, lon1, lat2, lon2) {
   const R=6371000.0, toRad=d=>d*Math.PI/180;
   const phi1=toRad(lat1), phi2=toRad(lat2), dphi=toRad(lat2-lat1), dl=toRad(lon2-lon1);
@@ -107,133 +161,422 @@ function haversine(lat1, lon1, lat2, lon2) {
   return 2*R*Math.asin(Math.sqrt(a));
 }
 
-// Načti graf sítě
+// === Síť a Routing ===
 let graph=null, nodesById=null, adj=null;
+
 function renderGrid() {
   gridLayer.clearLayers();
-  if (!graph) return;
+  if (!graph || !nodesById) return;
   for (const e of graph.edges) {
     const a = nodesById[e.from], b = nodesById[e.to];
-    L.polyline([[a.lat,a.lon],[b.lat,b.lon]], {weight:1, opacity:0.2}).addTo(gridLayer);
+    // Check if nodes exist before drawing
+    if (a && b) {
+       L.polyline([[a.lat,a.lon],[b.lat,b.lon]], {weight:1, color:'#ccc', opacity:0.3}).addTo(gridLayer);
+    } else {
+       console.warn(`Missing node for edge ${e.id}: from=${e.from}, to=${e.to}`);
+    }
   }
 }
+
 function nearestNode(lat, lon) {
   let best=null, bestd=Infinity;
+  if (!graph || !graph.nodes) return null;
   for (const n of graph.nodes) {
     const d=haversine(lat,lon,n.lat,n.lon);
     if (d<bestd) { bestd=d; best=n; }
   }
   return best;
 }
+
+// Funkce pro výpočet váhy hrany (vylepšená)
+function calculateEdgeWeight(edge, weightKey, nodesById) {
+    let baseWeight = edge.length_m;
+    if (baseWeight <= 0) baseWeight = 1; // Minimální váha, aby se zabránilo dělení nulou
+
+    const nodeFrom = nodesById[edge.from];
+    const nodeTo = nodesById[edge.to];
+    if (!nodeFrom || !nodeTo) return baseWeight * 100; // Penalizace za chybějící uzel
+
+    const edgeLat = (nodeFrom.lat + nodeTo.lat) / 2;
+    const edgeLon = (nodeFrom.lon + nodeTo.lon) / 2;
+    const edgeCenter = L.latLng(edgeLat, edgeLon);
+
+    // --- Safety Score / Risk Cost ---
+    let safetyPenalty = 0;
+    const MAX_DIST_HAZARD = 50; // metry
+    const MAX_DIST_LIGHT = 40;  // metry
+    const HAZARD_SEVERITY_MULTIPLIER = 15; // Jak moc závažnost zvyšuje penalizaci
+    const HAZARD_PROXIMITY_FACTOR = 0.5;   // Jak moc blízkost zvyšuje penalizaci
+    const LIGHT_DISTANCE_FACTOR = 0.3;   // Jak moc vzdálenost od světla zvyšuje penalizaci
+
+    hazardsLayer.eachLayer(layer => {
+        if (layer.getLatLng) {
+            const dist = edgeCenter.distanceTo(layer.getLatLng());
+            if (dist < MAX_DIST_HAZARD) {
+                safetyPenalty += (layer.feature.properties.severity || 1) * HAZARD_SEVERITY_MULTIPLIER * (MAX_DIST_HAZARD - dist) * HAZARD_PROXIMITY_FACTOR;
+            }
+        }
+    });
+
+    let minLightDist = Infinity;
+    streetLightingLayer.eachLayer(layer => {
+        if (layer.getLatLng) {
+            const dist = edgeCenter.distanceTo(layer.getLatLng());
+            minLightDist = Math.min(minLightDist, dist);
+        }
+     });
+     if (minLightDist > MAX_DIST_LIGHT && minLightDist !== Infinity) {
+        safetyPenalty += (minLightDist - MAX_DIST_LIGHT) * LIGHT_DISTANCE_FACTOR * baseWeight; // Váha roste s délkou tmavého úseku
+     } else if (minLightDist === Infinity && streetLightingLayer.getLayers().length > 0) {
+        // Pokud jsou světla načtena, ale žádné není blízko
+        safetyPenalty += 50 * LIGHT_DISTANCE_FACTOR * baseWeight; // Paušální penalizace
+     }
+
+    // Normalizace risk cost (0-100, 100 = nejhorší) - velmi zjednodušená
+    let calculatedRiskCost = Math.min(100, Math.max(0, safetyPenalty / (baseWeight * 0.5 + 1))); // Normalizace vzhledem k délce
+
+    // --- Heat Comfort Score / Heat Cost ---
+    let heatBenefit = 0;
+    const MAX_DIST_COOL = 100; // metry
+    const MAX_DIST_GREEN = 50; // metry
+    const COOL_SHADE_MULTIPLIER = 10;
+    const COOL_PROXIMITY_FACTOR = 0.4;
+    const GREEN_PROXIMITY_FACTOR = 0.3;
+
+    coolLayer.eachLayer(layer => {
+        if (layer.getLatLng) {
+            const dist = edgeCenter.distanceTo(layer.getLatLng());
+            if (dist < MAX_DIST_COOL) {
+                heatBenefit += (layer.feature.properties.shade_quality || 1) * COOL_SHADE_MULTIPLIER * (MAX_DIST_COOL - dist) * COOL_PROXIMITY_FACTOR;
+            }
+        }
+    });
+
+    greeneryLayer.eachLayer(layer => {
+        let featureCenter;
+        try { // Ochrana proti chybám v geometrii
+          if (layer.getLatLng) { featureCenter = layer.getLatLng(); }
+          else if (layer.getBounds) { featureCenter = layer.getBounds().getCenter(); }
+        } catch (e) { /* ignore */ }
+
+        if (featureCenter) {
+            const dist = edgeCenter.distanceTo(featureCenter);
+             if (dist < MAX_DIST_GREEN) {
+                 heatBenefit += (MAX_DIST_GREEN - dist) * GREEN_PROXIMITY_FACTOR * baseWeight; // Váha benefitu roste s délkou
+             }
+        }
+     });
+
+    // Normalizace heat cost (0-100, 100 = nejteplejší) - velmi zjednodušená
+    let calculatedHeatScore = Math.min(100, Math.max(0, heatBenefit / (baseWeight * 0.2 + 1))); // Normalizace benefitu
+    let calculatedHeatCost = 100 - calculatedHeatScore;
+
+    // --- Výsledná váha ---
+    // Koeficienty zde určují, jak moc se penalizace/benefity projeví oproti délce. NUTNO LADIT!
+    const RISK_WEIGHT_FACTOR = 0.05; // Jak moc risk_cost ovlivní váhu
+    const HEAT_WEIGHT_FACTOR = 0.05; // Jak moc heat_cost ovlivní váhu
+    const BASE_WEIGHT_FACTOR = 0.01; // Jak moc základní délka ovlivní váhu (sníženo, aby vynikly costy)
+
+    if (weightKey === 'risk_cost') {
+        return (calculatedRiskCost * RISK_WEIGHT_FACTOR * baseWeight) + (baseWeight * BASE_WEIGHT_FACTOR);
+    } else if (weightKey === 'heat_cost') {
+        return (calculatedHeatCost * HEAT_WEIGHT_FACTOR * baseWeight) + (baseWeight * BASE_WEIGHT_FACTOR);
+    } else { // length_m
+        return baseWeight;
+    }
+}
+
+
 function dijkstra(startId, goalId, weightKey) {
-  const dist={[startId]:0}, prev={}, heap=[[0,startId]];
-  function popMin(){ let mi=0; for(let i=1;i<heap.length;i++) if(heap[i][0]<heap[mi][0]) mi=i; return heap.splice(mi,1)[0]; }
-  while(heap.length){
-    const [curd,u]=popMin(); if(u===goalId) break; if(curd>(dist[u]??Infinity)) continue;
-    for(const e of adj[u]||[]){
-      let w=e.length_m;
-      if(weightKey==='risk_cost') w=e.risk_cost+0.001*e.length_m;
-      else if(weightKey==='heat_cost') w=e.heat_cost+0.001*e.length_m;
-      const nd=curd+w;
-      if(nd < (dist[e.to]??Infinity)){ dist[e.to]=nd; prev[e.to]=e; heap.push([nd,e.to]); }
+  if (!graph || !adj || !nodesById) return []; // Check if graph data is loaded
+  const dist = {}; dist[startId] = 0;
+  const prev = {};
+  const heap = [[0, startId]]; // Prioritní fronta jako pole [váha, id_uzlu]
+  const visited = new Set();
+
+  // Helper pro prioritní frontu (jednoduchá implementace)
+  function heapPush(item) { heap.push(item); heap.sort((a, b) => a[0] - b[0]); }
+  function heapPop() { return heap.shift(); }
+
+  while(heap.length > 0){
+    const [currentDist, u] = heapPop();
+
+    if (visited.has(u)) continue; // Pokud už byl uzel finálně zpracován
+    visited.add(u);
+
+    if(u === goalId) break; // Cíl nalezen
+
+    if(currentDist > (dist[u] ?? Infinity)) continue; // Přeskočení zastaralých záznamů ve frontě
+
+    for(const edge of adj[u] || []){
+      const v = edge.to;
+      if (visited.has(v)) continue; // Přeskočení již navštívených sousedů
+
+      // Dynamický výpočet váhy hrany
+      const weight = calculateEdgeWeight(edge, weightKey, nodesById);
+      if (weight === Infinity) continue; // Skip impassable edges
+
+      const newDist = currentDist + weight;
+
+      if(newDist < (dist[v] ?? Infinity)){
+         dist[v] = newDist;
+         prev[v] = edge; // Uložíme si hranu, kterou jsme přišli
+         heapPush([newDist, v]);
+       }
     }
   }
-  const path=[]; let u=goalId;
-  while(u!==startId){ const e=prev[u]; if(!e) return []; path.push(e); u=e.from; }
-  return path.reverse();
-}
-function pathToGeoJSON(path){
-  const coords=[], m={length:0,s:0,h:0};
-  for(const e of path){
-    const a=nodesById[e.from]; coords.push([a.lon,a.lat]);
-    m.length+=e.length_m; m.s+=e.safety_score; m.h+=e.heat_score;
+
+  // Rekonstrukce cesty
+  const pathEdges = [];
+  let currentId = goalId;
+  while(currentId !== startId){
+     const edge = prev[currentId];
+     if(!edge) return []; // Cesta nenalezena
+     pathEdges.push(edge);
+     currentId = edge.from;
   }
-  if(path.length){ const b=nodesById[path[path.length-1].to]; coords.push([b.lon,b.lat]); }
-  const avgS = path.length ? (m.s/path.length).toFixed(1) : null;
-  const avgH = path.length ? (m.h/path.length).toFixed(1) : null;
-  return {"type":"Feature","properties":{"length_m":Math.round(m.length),"avg_safety":avgS,"avg_heat":avgH},
-          "geometry":{"type":"LineString","coordinates":coords}};
+  return pathEdges.reverse(); // Otočíme pole hran do správného pořadí
 }
+
+function pathToGeoJSON(pathEdges){
+  const coords = [];
+  let totalLength = 0;
+  let totalWeightedRiskCost = 0;
+  let totalWeightedHeatCost = 0;
+
+  if (pathEdges.length === 0) {
+      return {"type":"Feature", "properties":{}, "geometry":{"type":"LineString","coordinates":[]}};
+  }
+
+  // Přidáme počáteční bod
+  const firstNode = nodesById[pathEdges[0].from];
+  if (firstNode) {
+     coords.push([firstNode.lon, firstNode.lat]);
+  } else {
+     console.error("Missing node for start of path:", pathEdges[0].from);
+     return null; // Chyba - nelze sestavit GeoJSON
+  }
+
+
+  for(const e of pathEdges){
+    const toNode = nodesById[e.to];
+    if (toNode) {
+       coords.push([toNode.lon, toNode.lat]);
+    } else {
+       console.error("Missing node for path edge:", e.to);
+       continue; // Pokračujeme, i když chybí uzel, ale cesta bude neúplná
+    }
+
+    const edgeLength = e.length_m > 0 ? e.length_m : 1;
+    totalLength += edgeLength;
+
+    // Znovu vypočítáme "čisté" costy pro metriky (bez násobení délkou a BASE_WEIGHT_FACTOR)
+    let edgeRiskCost = calculateEdgeWeight(e, 'risk_cost', nodesById) / (edgeLength * 0.05 + 0.01) ; // Odhad
+    let edgeHeatCost = calculateEdgeWeight(e, 'heat_cost', nodesById) / (edgeLength * 0.05 + 0.01); // Odhad
+    totalWeightedRiskCost += Math.min(100, Math.max(0, edgeRiskCost)) * edgeLength;
+    totalWeightedHeatCost += Math.min(100, Math.max(0, edgeHeatCost)) * edgeLength;
+  }
+
+  const avgRiskCost = (totalLength > 0) ? (totalWeightedRiskCost / totalLength) : 0;
+  const avgHeatCost = (totalLength > 0) ? (totalWeightedHeatCost / totalLength) : 0;
+  const avgSafetyScore = (100 - avgRiskCost).toFixed(1);
+  const avgHeatScore = (100 - avgHeatCost).toFixed(1);
+
+
+  return {
+    "type":"Feature",
+    "properties":{
+        "length_m": Math.round(totalLength),
+        "avg_safety_score": avgSafetyScore,
+        "avg_heat_score": avgHeatScore
+    },
+    "geometry":{
+        "type":"LineString",
+        "coordinates":coords
+    }
+  };
+}
+
 function planRoute(){
-  if(!startPoint || !destPoint){ alert("Klikněte pro nastavení START a CÍL."); return; }
-  if(!graph){ alert("Síť ještě není načtena."); return; }
-  const s=nearestNode(startPoint.lat,startPoint.lng), t=nearestNode(destPoint.lat,destPoint.lng);
-  const path = dijkstra(s.id, t.id, document.getElementById('routeType').value);
-  routeLayer.clearLayers();
-  if(path.length===0){ alert("Trasa nebyla nalezena."); return; }
-  const gj=pathToGeoJSON(path); routeLayer.addData(gj);
-  const coords=gj.geometry.coordinates.map(c=>[c[1],c[0]]); L.polyline(coords).bringToFront();
-  document.getElementById('metrics').innerHTML =
-    `Délka: <span class="badge">${gj.properties.length_m} m</span>
-     | SafetyScore ⌀: <span class="badge">${gj.properties.avg_safety}</span>
-     | HeatScore ⌀: <span class="badge">${gj.properties.avg_heat}</span>`;
+  if(!startPoint || !destPoint){ alert("Nejdříve kliknutím do mapy nastavte START a CÍL."); return; }
+  if(!graph){ alert("Síť (graph) ještě není načtena."); return; }
+
+  statusDiv.innerHTML = "Hledám trasu...";
+  metricsDiv.innerHTML = "Počítám...";
+
+  // Potřebujeme najít nejbližší uzly v naší síti k bodům start/cíl
+  const startNode = nearestNode(startPoint.lat, startPoint.lng);
+  const destNode = nearestNode(destPoint.lat, destPoint.lng);
+
+  if (!startNode || !destNode) {
+      alert("Nepodařilo se najít nejbližší body v síti.");
+      statusDiv.innerHTML = "Chyba při hledání.";
+      return;
+  }
+
+  // Malá vizuální úprava - přesun značek na nejbližší uzly (volitelné)
+  // startMarker.setLatLng([startNode.lat, startNode.lon]);
+  // destMarker.setLatLng([destNode.lat, destNode.lon]);
+
+  const routeType = document.getElementById('routeType').value;
+
+  // Použití setTimeout, aby se status "Hledám trasu..." stihl zobrazit před výpočtem
+  setTimeout(() => {
+      const path = dijkstra(startNode.id, destNode.id, routeType);
+
+      routeLayer.clearLayers();
+      if(path.length === 0){
+        alert("Trasa mezi zvolenými body nebyla nalezena.");
+        statusDiv.innerHTML = "Trasa nenalezena.";
+        metricsDiv.innerHTML = "Trasa nenalezena.";
+        return;
+      }
+
+      const gj = pathToGeoJSON(path);
+      if (gj) {
+          routeLayer.addData(gj);
+          map.fitBounds(routeLayer.getBounds().pad(0.1)); // Zoom na trasu
+
+          statusDiv.innerHTML = "Trasa nalezena.";
+          metricsDiv.innerHTML =
+            `Délka: <span class="badge">${gj.properties.length_m} m</span><br/>
+             Avg Safety Score: <span class="badge">${gj.properties.avg_safety_score}/100</span><br/>
+             Avg Heat Score: <span class="badge">${gj.properties.avg_heat_score}/100</span>`;
+      } else {
+          statusDiv.innerHTML = "Chyba při tvorbě GeoJSON.";
+          metricsDiv.innerHTML = "Chyba zobrazení trasy.";
+      }
+  }, 50); // Krátká pauza pro UI update
 }
 
-// 1) Načti síť
-fetch('data/Graph_Grid_Brno.json')
- .then(r=>{ if(!r.ok) throw new Error('Chyba při načítání sítě'); return r.json(); })
+// === Načítání dat ===
+let dataPromises = []; // Pole pro sledování všech fetch requestů
+
+statusDiv.innerHTML = 'Načítám síť...';
+
+// 1) Načti síť (Graph)
+const graphPromise = fetch('data/Graph_Grid_Brno.json')
+ .then(r=>{ if(!r.ok) throw new Error(`Chyba při načítání sítě: ${r.status}`); return r.json(); })
  .then(g=>{
-    graph=g; nodesById={}; adj={};
-    for(const n of graph.nodes) nodesById[n.id]=n;
-    for(const e of graph.edges){ if(!adj[e.from]) adj[e.from]=[]; adj[e.from].push(e); }
-    renderGrid(); document.getElementById('status').innerHTML='Data načtena ✓';
- })
- .catch(e=>{ console.error(e); document.getElementById('status').innerHTML='Chyba dat ✗'; alert('Nepodařilo se načíst síť.'); });
-
-// 2) Týmové vrstvy – nejdřív z configu, jinak fallback na ./data
-function withFallback(url, fallback){ return fetch(url).then(r=>r.ok?r.json():fetch(fallback).then(x=>x.json())) }
-function addTeamLayers(cfg){
-  const team = (cfg && cfg.team_datasets)||{};
-  const hz = team.hazards?.url || 'data/HazardObservations_Brno.geojson';
-  const cs = team.coolspots?.url || 'data/CoolSpots_Brno.geojson';
-  const se = team.school_entrances?.url || 'data/SchoolEntrances_Brno.geojson';
-  withFallback(hz,'data/HazardObservations_Brno.geojson').then(gj=>hazardsLayer.addData(gj).addTo(map)).catch(console.warn);
-  withFallback(cs,'data/CoolSpots_Brno.geojson').then(gj=>coolLayer.addData(gj).addTo(map)).catch(console.warn);
-  withFallback(se,'data/SchoolEntrances_Brno.geojson').then(gj=>schoolsLayer.addData(gj).addTo(map)).catch(console.warn);
-}
-
-// 3) Živá městská data (volitelné)
-function addCityPortal(cfg){
-  const live = (cfg && cfg.city_portal_live)||{};
-  function addGeo(url, layer, name){
-    if(!url) return;
-    fetch(url).then(r=>r.json()).then(gj=>{ layer.addData(gj).addTo(map); console.log('Loaded live:', name); })
-             .catch(e=>console.warn('Live layer failed', name, e));
-  }
-  addGeo(live.pedestrian_crossings?.url, L.geoJSON(null, {pointToLayer:(f,latlng)=>L.circleMarker(latlng,{radius:3,color:'#000'})}).bindPopup('Přechod'), 'Přechody');
-  addGeo(live.sidewalks?.url,             L.geoJSON(null, {style:{color:'#888'}}), 'Chodníky');
-  addGeo(live.street_lighting_poles?.url, L.geoJSON(null, {pointToLayer:(f,latlng)=>L.circleMarker(latlng,{radius:2,color:'#ff0'})}), 'VO');
-  const noiseUrl = live.noise_2022_wms?.url;
-  if (noiseUrl) {
-    if (noiseUrl.includes('format=geojson') || noiseUrl.endsWith('.geojson')){
-      fetch(noiseUrl).then(r=>r.json()).then(gj=>L.geoJSON(gj, {style:{color:'#f80', weight:1, opacity:0.5, fillOpacity:0.15}}).addTo(map));
-    } else if (L.tileLayer.wms) {
-      L.tileLayer.wms(noiseUrl, {layers:'', format:'image/png', transparent:true, opacity:0.5}).addTo(map);
+    graph=g;
+    nodesById={};
+    adj={};
+    // Indexace uzlů podle ID
+    for(const n of graph.nodes) {
+       nodesById[n.id]=n;
     }
-  }
+    // Vytvoření seznamu sousedů (adjacency list)
+    for(const e of graph.edges){
+       if(!adj[e.from]) adj[e.from]=[];
+       adj[e.from].push(e);
+       // Pokud je graf neorientovaný, přidat i opačnou hranu, pokud neexistuje
+       // U našeho gridu jsou hrany obousměrné definované explicitně
+    }
+    if (document.getElementById('toggleGrid').checked) renderGrid(); // Vykresli grid, pokud je zapnutý
+    statusDiv.innerHTML='Síť načtena ✓';
+    checkPlanButton(); // Zkontrolovat, zda lze plánovat
+    console.log(`Graph loaded: ${graph.nodes.length} nodes, ${graph.edges.length} edges.`);
+ })
+ .catch(e=>{
+    console.error("Nepodařilo se načíst síť:", e);
+    statusDiv.innerHTML='Chyba načítání sítě ✗';
+    alert('Kritická chyba: Nepodařilo se načíst soubor sítě (Graph_Grid_Brno.json). Aplikace nemůže plánovat trasy.');
+ });
+dataPromises.push(graphPromise);
+
+// Pomocná funkce pro načítání GeoJSON s fallbackem
+function loadGeoJsonLayer(layer, url, fallbackUrl, name, addToMap = true) {
+    const mainFetch = fetch(url)
+        .then(r => {
+            if (!r.ok) {
+                 console.warn(`Chyba načítání ${name} z ${url} (${r.status}), zkouším fallback: ${fallbackUrl}`);
+                 if (fallbackUrl) return fetch(fallbackUrl);
+                 else throw new Error(`HTTP ${r.status}`);
+             }
+             return r;
+        })
+        .then(r => {
+             if (!r.ok) throw new Error(`Fallback ${name} z ${fallbackUrl} selhal (${r.status})`);
+             return r.json();
+        })
+        .then(gj => {
+            layer.addData(gj);
+            if (addToMap) layer.addTo(map);
+            console.log(`Layer loaded: ${name} (${gj.features?.length || 0} features)`);
+            return true; // Signal success
+        })
+        .catch(e => {
+            console.error(`Nepodařilo se načíst vrstvu ${name}:`, e);
+            statusDiv.innerHTML += ` Chyba ${name} ✗`;
+            return false; // Signal failure
+        });
+     dataPromises.push(mainFetch);
 }
 
-// 4) Externí (volitelné) – GeoJSON
-function addExternal(cfg){
-  const ext = (cfg && cfg.external_live)||{};
-  function add(url, name, style){
-    if(!url) return;
-    fetch(url).then(r=>r.json()).then(gj=>L.geoJSON(gj, style||{}).addTo(map)).catch(e=>console.warn('External failed', name, e));
-  }
-  add(ext.chmi_air_quality?.url, 'CHMI AQ', {pointToLayer:(f,latlng)=>L.circleMarker(latlng,{radius:3,color:'#a0f'})});
-  add(ext.csuz_census_2021?.url, 'ČSÚ 2021', {style:{color:'#0a0', weight:1, fillOpacity:0.2}});
-  add(ext.osm_network?.url, 'OSM network', {style:{color:'#05a', weight:1}});
-}
 
 // Načti konfiguraci a spusť vrstvy
-fetch('layers.city.json').then(r=>r.json()).then(cfg=>{
-  addTeamLayers(cfg);
-  addCityPortal(cfg);
-  addExternal(cfg);
-}).catch(_=>{
-  // když není config, načti aspoň lokální týmové vrstvy
-  addTeamLayers(null);
-});
+statusDiv.innerHTML = 'Načítám konfigurační soubor...';
+fetch('layers.city.json')
+  .then(r => { if (!r.ok) throw new Error('layers.city.json nenalezen'); return r.json(); })
+  .then(cfg => {
+    statusDiv.innerHTML = 'Načítám vrstvy...';
+
+    // 2) Týmové vrstvy
+    const team = cfg.team_datasets || {};
+    loadGeoJsonLayer(hazardsLayer, team.hazards?.url, 'data/HazardObservations_Brno.geojson', 'Hazards', document.getElementById('toggleHazards').checked);
+    loadGeoJsonLayer(coolLayer, team.coolspots?.url, 'data/CoolSpots_Brno.geojson', 'CoolSpots', document.getElementById('toggleCool').checked);
+    loadGeoJsonLayer(schoolsLayer, team.school_entrances?.url, 'data/SchoolEntrances_Brno.geojson', 'Schools', document.getElementById('toggleSchools').checked);
+
+    // 3) Živá městská data (dle configu)
+    const live = cfg.city_portal_live || {};
+    // Příklad načtení VO - PŘIDAT DO CFG, pokud není
+    if (live.street_lighting_poles?.url) {
+        loadGeoJsonLayer(streetLightingLayer, live.street_lighting_poles.url, null, 'StreetLights', document.getElementById('toggleLights').checked);
+    } else {
+        console.warn("URL pro Street Lighting není v layers.city.json");
+    }
+     // Příklad načtení Zeleně - PŘIDAT DO CFG, pokud není
+    if (live.urban_greenery_trees?.url) { // Používáme stromy jako proxy pro zeleň
+        loadGeoJsonLayer(greeneryLayer, live.urban_greenery_trees.url, null, 'Greenery', document.getElementById('toggleGreenery').checked);
+    } else {
+        console.warn("URL pro Urban Greenery není v layers.city.json");
+    }
+    // Další městské vrstvy (přechody, chodníky, hluk...) lze načíst podobně, pokud je potřebujeme zobrazit
+    // loadGeoJsonLayer(L.geoJSON().bindPopup('Přechod'), live.pedestrian_crossings?.url, null, 'Crossings', false); // Příklad - nenačítat na mapu defaultně
+
+    // 4) Externí (volitelné) – GeoJSON (ukázková data)
+    const extLocal = cfg.external_local || {};
+    if (extLocal.chmi_air_quality?.url) {
+        loadGeoJsonLayer(L.geoJSON(null, {pointToLayer:(f,l)=>L.circleMarker(l,{radius:4,color:'#a0f'})}).bindTooltip('Air Quality'), extLocal.chmi_air_quality.url, null, 'AirQuality (local)', false);
+    }
+     if (extLocal.csuz_census_2021?.url) {
+        loadGeoJsonLayer(L.geoJSON(null, {style:{color:'#0a0', weight:1, fillOpacity:0.1}}).bindTooltip('Census Data'), extLocal.csuz_census_2021.url, null, 'Census (local)', false);
+     }
+
+    // Počkáme na dokončení všech načítání
+    Promise.all(dataPromises).then(results => {
+       const allLoaded = results.every(res => res !== false); // Zkontrolujeme, zda se vše načetlo (nebo byl použit fallback)
+       if (allLoaded && graph) {
+           statusDiv.innerHTML = 'Všechna data načtena ✓';
+       } else if (graph) {
+           statusDiv.innerHTML = 'Síť načtena, některé vrstvy chybí.';
+       } else {
+            statusDiv.innerHTML = 'Chyba načítání dat ✗';
+       }
+       checkPlanButton(); // Finální kontrola tlačítka plánování
+    });
+
+  })
+  .catch(e => {
+    console.error("Chyba při zpracování layers.city.json:", e);
+    statusDiv.innerHTML = 'Chyba konfigurace ✗';
+    // Pokud selže config, zkusíme načíst aspoň lokální týmová data
+    loadGeoJsonLayer(hazardsLayer, 'data/HazardObservations_Brno.geojson', null, 'Hazards (fallback)');
+    loadGeoJsonLayer(coolLayer, 'data/CoolSpots_Brno.geojson', null, 'CoolSpots (fallback)');
+    loadGeoJsonLayer(schoolsLayer, 'data/SchoolEntrances_Brno.geojson', null, 'Schools (fallback)');
+    Promise.all(dataPromises).finally(() => checkPlanButton()); // I po fallbacku zkontrolovat
+  });
+
 </script>
 </body>
 </html>

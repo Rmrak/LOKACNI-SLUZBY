@@ -1,0 +1,317 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tyrsuv sad"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.6023589,
+          49.2027128
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Luzanky SS1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.6077778,
+          49.2083389
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Luzanky SVC2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.6069417,
+          49.2065792
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Koliste Park"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.6145658,
+          49.1966892
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Koliste road"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.6147853,
+          49.19701
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Uvoz Hot Spot"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.5936431,
+          49.1980897
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Arboretum (measurement site)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.6138364,
+          49.2160872
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Detska nemocnice (Children's Hospital)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.6162872,
+          49.2027244
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Open Garden"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.598333333333333,
+          49.19694444444444
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bjornsonuv sad"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.59372,
+          49.20714
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Botanical Garden (Masaryk University)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.59655,
+          49.20424
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Arboretum Brno (Mendel University)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.61324,
+          49.21359
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Stranska skala"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.6757389,
+          49.1905694
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Marianské udoli"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.716471,
+          49.203232
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hady hill quarry"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.67139,
+          49.21889
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Holedna game reserve"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.526605,
+          49.20334583333334
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kamenny vrch viewpoint"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.55286,
+          49.181662
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lesopark Kamenny vrch"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.557598,
+          49.182868
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Wilsonuv les"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.624685,
+          49.178328
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Park Obilni trh"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.597466,
+          49.19887
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Schreberovy zahradky"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.62123,
+          49.20773
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hvezdicka Park Eugena Horvatha"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.621566666666666,
+          49.201258333333335
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Certova rokle"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.6247,
+          49.2294
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Villa Tugendhat"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.61583,
+          49.20722
+        ]
+      }
+    }
+  ]
+}

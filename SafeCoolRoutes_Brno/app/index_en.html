@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Safe & Cool Routes – Brno (EN)</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8IX7C8gS0S2Q8Y+WQ0bk8RIG8WcJ6iYG3PaY5E9O+V1YQUhCEV4hWw2D2Tqg8Jm2OgQ==" crossorigin=""/>
+  <style>
+    html,body,#map{height:100%;margin:0} header{position:absolute;z-index:9999;left:10px;top:10px;background:#fff;padding:10px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.1);max-width:380px;font:14px/1.3 system-ui,sans-serif} header h1{font-size:16px;margin:0 0 8px} label{display:block;margin:6px 0 2px} input,select,button,textarea{width:100%;padding:6px;border-radius:6px;border:1px solid #ccc} .row{display:flex;gap:6px} .row>*{flex:1} .markers-legend{margin-top:6px;font-size:12px;color:#555} .pill{display:inline-block;padding:2px 6px;border-radius:999px;margin-right:4px} .pill.cool{background:#e7f5ff} .pill.risk{background:#fff5f5} footer{position:absolute;z-index:9999;right:10px;bottom:10px;background:#fff;padding:8px 10px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.1);font:12px system-ui,sans-serif} .small{font-size:12px;color:#666} .flex{display:flex;gap:6px} .hidden{display:none} .btn{cursor:pointer} .toast{position:absolute;top:10px;right:10px;z-index:10000;background:#000;color:#fff;padding:8px 10px;border-radius:6px;opacity:.9} 
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <header>
+    <h1>Safe & Cool Routes – Brno</h1>
+    <div class="row">
+      <div>
+        <label>Start (lon,lat)</label>
+        <input id="start" placeholder="16.6068,49.1951"/>
+      </div>
+      <div>
+        <label>Destination (lon,lat)</label>
+        <input id="end" placeholder="16.6120,49.2010"/>
+      </div>
+    </div>
+    <div class="row">
+      <select id="profile">
+        <option value="foot">Walking</option>
+        <option value="bike">Bike</option>
+        <option value="driving">Driving</option>
+      </select>
+      <button class="btn" id="routeBtn">Draw route</button>
+      <button class="btn" id="clearBtn">Clear</button>
+    </div>
+    <div class="small">Tip: Click on the map to fill Start/End (first click → Start, second → End).</div>
+    <hr/>
+    <h2 style="font-size:14px;margin:6px 0">Add a spot</h2>
+    <div class="row">
+      <input id="spotName" placeholder="Name"/>
+      <select id="spotType">
+        <option value="cool">Cool</option>
+        <option value="risk">Risk</option>
+      </select>
+    </div>
+    <label>Description</label>
+    <textarea id="spotDesc" rows="2" placeholder="Optional"></textarea>
+    <div class="row">
+      <input id="spotLat" placeholder="lat"/>
+      <input id="spotLon" placeholder="lon"/>
+    </div>
+    <div class="row">
+      <button class="btn" id="useCursor">Use last click</button>
+      <button class="btn" id="addSpot">Add spot</button>
+    </div>
+    <div class="markers-legend">Legend: <span class="pill cool">Cool</span> <span class="pill risk">Risk</span></div>
+  </header>
+  <footer>Data & routing by OpenStreetMap / OSRM. Backend: <code>/server</code></footer>
+  <div id="toast" class="toast hidden"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha512-vI8bMsfS3x0qSRS9JQ5aJqJpT9XyM54q9WlH0I1GtIsfRSAxEPPGjBJOCa/MEGL3+rXhN3kLBZk0h3bGra3xsg==" crossorigin=""></script>
+  <script>
+  const API = location.origin; // same origin if hosted together; change to your server URL if separate
+  const toast = (msg)=>{const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),2200)};
+  const map = L.map('map').setView([49.1951,16.6068], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19, attribution: '&copy; OpenStreetMap'
+  }).addTo(map);
+  let clickIdx=0; let lastClick=null;
+  let routeLayer=null;
+  const coolIcon = L.icon({iconUrl:'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png', iconSize:[25,41], iconAnchor:[12,41]});
+  const riskIcon = L.divIcon({className:'risk-dot', html:'<div style=\'width:14px;height:14px;background:#ff4d4f;border:2px solid #fff;border-radius:50%\'></div>'});
+  const coolGroup = L.layerGroup().addTo(map);
+  const riskGroup = L.layerGroup().addTo(map);
+
+  function parseCoord(s){if(!s) return null; const [lon,lat]=s.split(',').map(v=>parseFloat(v.trim())); if(Number.isFinite(lat)&&Number.isFinite(lon)) return {lat,lon}; return null;}
+
+  async function loadSpots(){
+    const r = await fetch(API+'/api/spots'); const data = await r.json();
+    coolGroup.clearLayers(); riskGroup.clearLayers();
+    (data.spots||[]).forEach(s=>{
+      const m = L.marker([s.lat, s.lon], {icon: s.type==='risk'? riskIcon: coolIcon}).bindPopup(`<b>${s.name}</b><br/>${s.description||''}<br/><i>${s.type}</i>`);
+      (s.type==='risk'? riskGroup: coolGroup).addLayer(m);
+    });
+  }
+  loadSpots();
+
+  map.on('click', (e)=>{
+    const {lat,lng} = e.latlng; lastClick=[lat,lng];
+    if(clickIdx%2===0){document.getElementById('start').value = `${lng.toFixed(6)},${lat.toFixed(6)}`; toast('Start set');}
+    else {document.getElementById('end').value = `${lng.toFixed(6)},${lat.toFixed(6)}`; toast('Destination set');}
+    clickIdx++;
+  });
+
+  document.getElementById('useCursor').onclick = ()=>{
+    if(!lastClick) return toast('Click the map first');
+    const [lat,lon] = lastClick; document.getElementById('spotLat').value = lat.toFixed(6); document.getElementById('spotLon').value = lon.toFixed(6);
+  };
+
+  document.getElementById('addSpot').onclick = async ()=>{
+    const name = document.getElementById('spotName').value.trim();
+    const type = document.getElementById('spotType').value;
+    const description = document.getElementById('spotDesc').value.trim();
+    const lat = parseFloat(document.getElementById('spotLat').value);
+    const lon = parseFloat(document.getElementById('spotLon').value);
+    if(!name || !Number.isFinite(lat) || !Number.isFinite(lon)) return toast('Fill name and valid coordinates');
+    const r = await fetch(API+'/api/spots',{method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name,type,description,lat,lon})});
+    if(r.ok){ toast('Spot added'); loadSpots(); } else { toast('Failed to add'); }
+  };
+
+  async function drawRoute(){
+    const s = parseCoord(document.getElementById('start').value);
+    const e = parseCoord(document.getElementById('end').value);
+    const profile = document.getElementById('profile').value;
+    if(!s||!e) return toast('Invalid start/end');
+    const url = `${API}/api/route?start=${s.lon},${s.lat}&end=${e.lon},${e.lat}&profile=${profile}`;
+    const r = await fetch(url); if(!r.ok) return toast('Routing failed');
+    const data = await r.json();
+    const g = data.routes?.[0]?.geometry;
+    if(!g) return toast('No route found');
+    if(routeLayer) { map.removeLayer(routeLayer); routeLayer=null; }
+    routeLayer = L.geoJSON(g, {style:{weight:5,opacity:0.9}}).addTo(map);
+    const b = routeLayer.getBounds(); if(b.isValid()) map.fitBounds(b, {padding:[20,20]});
+  }
+  document.getElementById('routeBtn').onclick = drawRoute;
+  document.getElementById('clearBtn').onclick = ()=>{ if(routeLayer){map.removeLayer(routeLayer); routeLayer=null;} };
+  </script>
+</body>
+</html>
